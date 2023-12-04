@@ -4,6 +4,8 @@ import java.math.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.*;
 import static java.util.Comparator.*;
 import org.iesvdm.jardineria.modelo.*;
@@ -146,7 +148,8 @@ class TestExamenStream {
             //TODO STREAMS
             var solList = list.stream();
 
-            solList.forEach(System.out::println);
+            List<String> listaOficinas = list.stream().map(o -> "Ciudad: " + o.getCiudad() + " - Teléfono: " + o.getTelefono()).collect(Collectors.toList());
+            listaOficinas.forEach(System.out::println);
 
             oficinaHome.commitTransaction();
         } catch (RuntimeException e) {
@@ -174,7 +177,11 @@ class TestExamenStream {
             //TODO STREAMS
             var solList = list.stream();
 
-            solList.forEach(System.out::println);
+            List<String> empleados = list.stream().filter(e -> e.getJefe()!= null && e.getCodigoEmpleado() == 7)
+                            .map(e -> "Nombre: " + e.getNombre() + " Apellidos: " + e.getApellido1() + " " + e.getApellido2()
+                            + " Email: " + e.getEmail()).collect(toList());
+
+            empleados.forEach(System.out::println);
 
             empleadoHome.commitTransaction();
         } catch (RuntimeException e) {
@@ -202,7 +209,14 @@ class TestExamenStream {
             //TODO STREAMS
             var solList = list.stream();
 
-            solList.forEach(System.out::println);
+//            List<Empleado> clientes = list.stream().map(c -> "Nombre cliente " +  c.getNombreCliente() +
+//                    " - Nombre representante: " + c.getRepresentanteVentas().getNombre() +
+//                    " -  Apellido representante: " + c.getRepresentanteVentas().getApellido1())
+//                            .sorted(comparing(Cliente::getNombreCliente))
+//                                    .sorted(comparing(Empleado::getApellido1).reversed())
+//                                            .collect(toList());
+//
+//            clientes.forEach(System.out::println);
 
             clienteHome.commitTransaction();
         } catch (RuntimeException e) {
@@ -239,8 +253,11 @@ class TestExamenStream {
 
             //TODO STREAMS
             var solList = list.stream();
+            List<Pedido> pedidos = list.stream().filter(p -> p.getEstado().equals("Rechazado"))
+                    .filter(p -> p.getFechaPedido().toString().contains("2009"))
+                    .collect(toList());
 
-            solList.forEach(System.out::println);
+            pedidos.forEach(System.out::println);
 
             PedidoHome.commitTransaction();
         } catch (RuntimeException e) {
@@ -265,6 +282,10 @@ class TestExamenStream {
 
             //TODO STREAMS
             var solList = list.stream();
+
+            List<Cliente> clientesNoEspanoles = list.stream().filter(c -> !c.getPais().equals("Spain"))
+                            .sorted(comparing(c -> c.getNombreCliente()))
+                                    .collect(toList());
 
             solList.forEach(System.out::println);
 
@@ -292,6 +313,7 @@ class TestExamenStream {
 
             //TODO STREAMS
             var solList = list.stream();
+            List<Oficina> oficinas = list.stream().filter(o -> o.getCiudad().equals("Fuenlabrada")).collect(toList());
 
             solList.forEach(System.out::println);
 
@@ -318,8 +340,9 @@ class TestExamenStream {
 
             //TODO STREAMS
             var solList = list.stream();
+            List<Set<Pago>> clientes2 = list.stream().map(c -> c.getPagos()).collect(toList());
 
-            solList.forEach(System.out::println);
+            clientes2.forEach(System.out::println);
 
             clienteHome.commitTransaction();
         } catch (RuntimeException e) {
